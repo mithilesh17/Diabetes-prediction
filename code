@@ -1,0 +1,23 @@
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+
+info = pd.read_csv('train.csv')
+
+P = info.drop(['Outcome', 'ID'], axis = 1)
+Q = info['Outcome']
+P_train, P_test, Q_train, Q_test = train_test_split(P, Q, test_size=0.2, random_state=42)
+
+model = LogisticRegression()
+model.fit(P_train, Q_train)
+
+
+diabetes_info = pd.read_csv('diabetes_test.csv')
+diabetes = diabetes_info.drop('ID', axis = 1)
+predictions = model.predict(diabetes)
+
+predictions_df = pd.DataFrame({'ID': diabetes_info['ID'], 'predicted':predictions})
+predictions_df.to_csv('predictions.csv', index = False)
+
+
+
